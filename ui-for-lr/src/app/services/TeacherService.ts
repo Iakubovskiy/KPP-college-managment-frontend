@@ -1,6 +1,13 @@
 import APIService from "./ApiService";
 import Schedule from "../models/Schedule";
 
+interface ScheduleResponse{
+    id: number;
+    group: string;
+    subject: string;
+    day: string;
+    time: string;
+}
 
 class SubjectService {
     private apiService: APIService;
@@ -10,10 +17,10 @@ class SubjectService {
         this.apiService = apiService;
     }
 
-    async getTeacherSchedule(id: number): Promise<Schedule[]> {
+    async getSchedule(id: number): Promise<ScheduleResponse[]> {
         return this.apiService.getById(this.resource, id);
     }
-    async getTeacherScheduleForDay(id: number, day:string): Promise<Schedule[]> {
+    async getScheduleForDay(id: number, day:string): Promise<ScheduleResponse[]> {
         return this.apiService.getById(`${this.resource}/${id}`, day);
     }
 }

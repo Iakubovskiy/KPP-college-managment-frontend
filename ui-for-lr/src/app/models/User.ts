@@ -2,5 +2,6 @@ export default interface User {
     id: number;
     name: string;
     email: string;
-    getRole(): string;
+    role: string;
+    surname: string;
 }

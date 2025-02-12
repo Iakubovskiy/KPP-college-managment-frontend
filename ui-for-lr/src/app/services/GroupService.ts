@@ -1,6 +1,15 @@
 import APIService from "./ApiService";
-import { CreateGroupDTO, UpdateGroupDTO, GroupResponse, GroupScheduleResponse } from "../dto/group.types";
+import { CreateGroupDTO, UpdateGroupDTO, GroupResponse } from "../dto/group.types";
 import Student from "../models/Student";
+import Schedule from "@/app/models/Schedule";
+
+interface ScheduleResponse{
+    id: number;
+    teacher: string;
+    subject: string;
+    day: string;
+    time: string;
+}
 
 class GroupService {
     private apiService: APIService;
@@ -22,8 +31,12 @@ class GroupService {
         return this.apiService.getAll(`${this.resource}-students/${id}`);
     }
 
-    async getGroupSchedule(id: number): Promise<GroupScheduleResponse[]> {
+    async getSchedule(id: number): Promise<ScheduleResponse[]> {
         return this.apiService.getAll(`${this.resource}-schedule/${id}`);
+    }
+
+    async getScheduleForDay(id: number, day:string): Promise<ScheduleResponse[]> {
+        return this.apiService.getAll(`${this.resource}-schedule/${id}/${day}`);
     }
 
     async createGroup(data: CreateGroupDTO): Promise<GroupResponse> {
