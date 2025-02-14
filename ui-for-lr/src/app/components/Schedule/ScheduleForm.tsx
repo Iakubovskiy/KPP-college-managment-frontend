@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Card, CardBody, CardHeader, Input, Button, Select, SelectItem } from "@nextui-org/react";
 import ScheduleService from '../../services/ScheduleService';
 import GroupService from '../../services/GroupService';
 import SubjectService from '../../services/SubjectService';
@@ -16,7 +15,7 @@ const DAYS = [
 ];
 
 const TIMES = [
-    "08:30", "10:25", "12:20", "14:15", "16:10"
+    "08:30", "10:00", "11:50", "13:20", "14:50"
 ].map(time => ({ label: time, value: time }));
 
 const ScheduleForm = () => {
@@ -78,7 +77,7 @@ const ScheduleForm = () => {
                 time: formData.time
             };
 
-            if (id === '0') {
+            if (id === '0' || !id) {
                 await scheduleService.createSchedule(scheduleData);
             } else {
                 await scheduleService.updateSchedule(Number(id), scheduleData);
@@ -100,96 +99,106 @@ const ScheduleForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <Card className="max-w-2xl mx-auto">
-                <CardHeader className="flex gap-3">
-                    <div className="flex flex-col">
-                        <p className="text-xl">
-                            {id === '0' ? 'Створення нового розкладу' : 'Редагування розкладу'}
-                        </p>
-                    </div>
-                </CardHeader>
-                <CardBody>
+        <div className="min-h-screen bg-gray-50 py-8 text-black">
+            <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg">
+                <div className="p-6 border-b border-gray-200">
+                    <h2 className="text-xl font-semibold">
+                        {id === '0' ? 'Створення нового розкладу' : 'Редагування розкладу'}
+                    </h2>
+                </div>
+                <div className="p-6">
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <Select
-                            label="Група"
-                            placeholder="Оберіть групу"
-                            value={formData.group_id}
-                            onChange={(e) => handleChange('group_id', e.target.value)}
-                            isRequired
-                        >
-                            {groups.map((group) => (
-                                <SelectItem key={group.id} value={group.id.toString()}>
-                                    {group.name}
-                                </SelectItem>
-                            ))}
-                        </Select>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Група</label>
+                            <select
+                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                                value={formData.group_id}
+                                onChange={(e) => handleChange('group_id', e.target.value)}
+                                required
+                            >
+                                <option value="">Оберіть групу</option>
+                                {groups.map((group) => (
+                                    <option key={group.id} value={group.id.toString()}>
+                                        {group.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                        <Select
-                            label="Предмет"
-                            placeholder="Оберіть предмет"
-                            value={formData.subject_id}
-                            onChange={(e) => handleChange('subject_id', e.target.value)}
-                            isRequired
-                        >
-                            {subjects.map((subject) => (
-                                <SelectItem key={subject.id} value={subject.id.toString()}>
-                                    {subject.name} ({subject.teacher.name})
-                                </SelectItem>
-                            ))}
-                        </Select>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Предмет</label>
+                            <select
+                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                                value={formData.subject_id}
+                                onChange={(e) => handleChange('subject_id', e.target.value)}
+                                required
+                            >
+                                <option value="">Оберіть предмет</option>
+                                {subjects.map((subject) => (
+                                    <option key={subject.id} value={subject.id.toString()}>
+                                        {subject._name} ({subject.teacher.surname} {subject.teacher.first_name})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                        <Select
-                            label="День"
-                            placeholder="Оберіть день"
-                            value={formData.day}
-                            onChange={(e) => handleChange('day', e.target.value)}
-                            isRequired
-                        >
-                            {DAYS.map((day) => (
-                                <SelectItem key={day.value} value={day.value}>
-                                    {day.label}
-                                </SelectItem>
-                            ))}
-                        </Select>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">День</label>
+                            <select
+                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                                value={formData.day}
+                                onChange={(e) => handleChange('day', e.target.value)}
+                                required
+                            >
+                                <option value="">Оберіть день</option>
+                                {DAYS.map((day) => (
+                                    <option key={day.value} value={day.value}>
+                                        {day.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                        <Select
-                            label="Час"
-                            placeholder="Оберіть час"
-                            value={formData.time}
-                            onChange={(e) => handleChange('time', e.target.value)}
-                            isRequired
-                        >
-                            {TIMES.map((time) => (
-                                <SelectItem key={time.value} value={time.value}>
-                                    {time.label}
-                                </SelectItem>
-                            ))}
-                        </Select>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Час</label>
+                            <select
+                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
+                                value={formData.time}
+                                onChange={(e) => handleChange('time', e.target.value)}
+                                required
+                            >
+                                <option value="">Оберіть час</option>
+                                {TIMES.map((time) => (
+                                    <option key={time.value} value={time.value}>
+                                        {time.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
                         {error && (
                             <div className="text-red-500 text-sm">{error}</div>
                         )}
 
                         <div className="flex justify-between pt-4">
-                            <Button
-                                color="default"
-                                variant="flat"
-                                onPress={() => router.push('/admin/schedule')}
+                            <button
+                                type="button"
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                                onClick={() => router.push('/schedule')}
                             >
                                 Скасувати
-                            </Button>
-                            <Button
-                                color="primary"
+                            </button>
+                            <button
                                 type="submit"
-                                isLoading={loading}
+                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                                disabled={loading}
                             >
                                 {loading ? 'Збереження...' : 'Зберегти'}
-                            </Button>
+                            </button>
                         </div>
                     </form>
-                </CardBody>
-            </Card>
+                </div>
+            </div>
         </div>
     );
 };

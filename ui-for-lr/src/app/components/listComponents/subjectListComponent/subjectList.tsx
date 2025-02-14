@@ -9,15 +9,17 @@ import Subject from "@/app/models/Subject";
 
 interface SubjectForTable{
     id: number;
-    name: string;
-    hoursPerWeek: number;
+    _name: string;
+    hours_per_week: number;
     teacherName: string;
     actions?: string;
 }
 
+interface SubjectListProps {
+    role:string;
+}
 
-
-export default function SubjectList(role:string) {
+export default function SubjectList({role}: SubjectListProps) {
     const [subjects, setSubjects] = useState<SubjectForTable[]>([]);
     const subjectService = new SubjectService();
     const router = useRouter();
@@ -49,8 +51,8 @@ export default function SubjectList(role:string) {
 
 
     const columns: Column<SubjectForTable>[] = [
-        { name: "Назва", uid: "name" },
-        { name: "Годин на тиждень", uid: "hoursPerWeek" },
+        { name: "Назва", uid: "_name" },
+        { name: "Годин на тиждень", uid: "hours_per_week" },
         { name: "Викладач", uid: "teacherName" },
     ];
 
@@ -62,7 +64,7 @@ export default function SubjectList(role:string) {
     }
 
     return (
-        <div className="p-4">
+        <div className="p-4 text-black">
             <div className="flex justify-between mb-4">
                 <Link href={`${router.pathname}/0`}>
                     <Button color="success">

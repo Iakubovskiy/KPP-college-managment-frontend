@@ -1,5 +1,5 @@
 import APIService from "./ApiService";
-import Schedule from "../models/Schedule";
+import Teacher from "@/app/models/Teacher";
 
 interface ScheduleResponse{
     id: number;
@@ -15,6 +15,10 @@ class SubjectService {
 
     constructor(apiService: APIService = new APIService()) {
         this.apiService = apiService;
+    }
+
+    async getAllTeachers():Promise<Teacher[]>{
+        return this.apiService.getAll(this.resource);
     }
 
     async getSchedule(id: number): Promise<ScheduleResponse[]> {

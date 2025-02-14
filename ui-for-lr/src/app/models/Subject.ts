@@ -4,5 +4,5 @@ export default interface Subject {
     id: number;
     _name: string;
     teacher: Teacher;
-    hoursPerWeek: number;
+    hours_per_week: number;
 }
