@@ -1,17 +1,29 @@
 "use client"
-import Image from "next/image";
-import GroupService from "@/app/services/GroupService";
+
 
 export default function Home() {
-  const handleOnClick = () => {
-    const groupService = new GroupService();
-    console.log(groupService.getAllGroups());
-  };
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <button onClick={handleOnClick}>
-        test button
-      </button>
-    </div>
-  );
+    const handleOnClick = () =>{
+        fetch('https://localhost/api/login_check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: 'user@example.com',
+                password: '123',
+            }),
+        })
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+            .catch((err) => console.error('Error:', err));
+
+    };
+    return (
+        <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+            <button onClick={handleOnClick}>
+                dfdsfewwefew
+            </button>
+        </div>
+    );
+
 }

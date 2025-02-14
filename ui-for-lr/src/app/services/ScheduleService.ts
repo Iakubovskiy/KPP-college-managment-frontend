@@ -1,6 +1,13 @@
 import APIService from "./ApiService";
 import Schedule from "../models/Schedule";
 
+interface CreateScheduleDto{
+    group_id: number;
+    subject_id: number;
+    day: string;
+    time: string;
+}
+
 class ScheduleService {
     private apiService: APIService;
     private readonly resource = "schedule";
@@ -17,11 +24,11 @@ class ScheduleService {
         return this.apiService.getById(this.resource, id);
     }
 
-    async createSchedule(data: Omit<Schedule, "id">): Promise<Schedule> {
+    async createSchedule(data: CreateScheduleDto): Promise<Schedule> {
         return this.apiService.create(this.resource, data);
     }
 
-    async updateSchedule(id: number, data: Partial<Omit<Schedule, "id">>): Promise<Schedule> {
+    async updateSchedule(id: number, data: CreateScheduleDto): Promise<Schedule> {
         return this.apiService.update(this.resource, id, data);
     }
 

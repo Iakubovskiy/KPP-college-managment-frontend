@@ -1,10 +1,19 @@
 import APIService from "./ApiService";
-import ApiService from "./ApiService";
+
+interface RegisterData{
+    role: string,
+    email: string,
+    password: string,
+    name: string,
+    surname: string,
+    dateOfBirth?: string | null,
+    group_id?: number | null
+}
 
 class AuthService {
     private apiService: APIService;
 
-    constructor(apiService: APIService = new ApiService()) {
+    constructor(apiService: APIService = new APIService()) {
         this.apiService = apiService;
     }
 
@@ -13,17 +22,11 @@ class AuthService {
     }
 
     async register(
-        role: string,
-        email: string,
-        password: string,
-        name: string,
-        surname: string,
-        dateOfBirth?: string | null,
-        group_id?: number | null
+        userData: RegisterData,
     ): Promise<any> {
-        const data: any = { role, email, password, name, surname };
-        if (dateOfBirth) data.dateOfBirth = dateOfBirth;
-        if (group_id) data.group_id = group_id;
+        const data: any = { ...userData };
+        if (userData.dateOfBirth) data.dateOfBirth = userData.dateOfBirth;
+        if (userData.group_id) data.group_id = userData.group_id;
 
         return this.apiService.create("register", data);
     }

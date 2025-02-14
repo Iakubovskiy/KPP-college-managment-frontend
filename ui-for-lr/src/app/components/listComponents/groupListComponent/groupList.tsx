@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import CustomTable, {ActionType} from "../CustomTableComponent/CustomTable";
 import {Column} from "../CustomTableComponent/CustomTable";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import GroupService from "../../../services/GroupService"
 import Link from "next/link";
 import {useRouter} from "next/router";
 import Group from "../../../models/Group";
 
-export default function GroupList(role:string) {
+interface GroupListProps {
+    role: string;
+}
+
+export default function GroupList({role}: GroupListProps) {
     const [groups, setGroups] = useState<Group[]>([]);
     const groupService = new GroupService();
     const router = useRouter();
@@ -40,20 +44,18 @@ export default function GroupList(role:string) {
     let actions: ActionType[] = [];
     if(role === "admin") {
         actions = ['edit', 'delete'];
-    }else {
-        actions = ["view"];
     }
 
     return (
         <div className="p-4">
             <div className="flex justify-between mb-4">
-                <Link href={`${router.pathname}/0`}>
-                    <Button color="success">
+                <Link href={`${router.pathname}/edit/0`}>
+                    <Button color="success" className="text-black">
                         Create
                     </Button>
                 </Link>
                 <Link href="/admin/dashboard" passHref>
-                    <Button color="primary">
+                    <Button color="primary" className="text-black">
                         Back
                     </Button>
                 </Link>

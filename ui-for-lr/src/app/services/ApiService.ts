@@ -32,8 +32,8 @@ class APIService {
 
   private getDefaultHeaders(): HeadersInit {
     const headers: HeadersInit = {
+      "Content-Type": "application/json",
     };
-    headers["Authorization"] = `Bearer testToken1234`;
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       if (token) {

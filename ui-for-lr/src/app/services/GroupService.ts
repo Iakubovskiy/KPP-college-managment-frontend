@@ -2,6 +2,7 @@ import APIService from "./ApiService";
 import { CreateGroupDTO, UpdateGroupDTO, GroupResponse } from "../dto/group.types";
 import Student from "../models/Student";
 import Schedule from "@/app/models/Schedule";
+import Group from "@/app/models/Group";
 
 interface ScheduleResponse{
     id: number;
@@ -19,11 +20,11 @@ class GroupService {
         this.apiService = apiService;
     }
 
-    async getAllGroups(): Promise<GroupResponse[]> {
+    async getAllGroups(): Promise<Group[]> {
         return this.apiService.getAll(this.resource);
     }
 
-    async getGroupById(id: number): Promise<GroupResponse> {
+    async getGroupById(id: number): Promise<Group> {
         return this.apiService.getById(this.resource, id);
     }
 
