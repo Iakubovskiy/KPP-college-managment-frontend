@@ -5,7 +5,7 @@ interface ScheduleResponse{
     id: number;
     group: string;
     subject: string;
-    day: string;
+    _day: string;
     time: string;
 }
 

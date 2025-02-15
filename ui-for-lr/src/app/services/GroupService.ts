@@ -8,7 +8,7 @@ interface ScheduleResponse{
     id: number;
     teacher: string;
     subject: string;
-    day: string;
+    _day: string;
     time: string;
 }
 

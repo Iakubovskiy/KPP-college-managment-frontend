@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import ScheduleService from '../../services/ScheduleService';
@@ -51,7 +52,7 @@ const ScheduleForm = () => {
                     setFormData({
                         group_id: schedule.group.id.toString(),
                         subject_id: schedule.subject.id.toString(),
-                        day: schedule.day,
+                        day: schedule._day,
                         time: schedule.time,
                     });
                 }
@@ -82,7 +83,7 @@ const ScheduleForm = () => {
             } else {
                 await scheduleService.updateSchedule(Number(id), scheduleData);
             }
-            router.push('/admin/schedule');
+            router.push('/schedule');
         } catch (err) {
             setError('Помилка при збереженні розкладу');
             console.error(err);

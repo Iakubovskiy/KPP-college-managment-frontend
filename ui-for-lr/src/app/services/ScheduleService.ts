@@ -16,9 +16,24 @@ class ScheduleService {
         this.apiService = apiService;
     }
 
-    async getAllSchedules(): Promise<Schedule[]> {
-        return this.apiService.getAll(this.resource);
+    async getAllSchedules({ day, group_id }: { day?: string; group_id?: number }): Promise<Schedule[]> {
+        const data:Schedule[] = await this.apiService.getAll(this.resource);
+
+        return (data.filter((schedule:Schedule) => {
+            let isMatch = true;
+
+            if (day && schedule._day !== day) {
+                isMatch = false;
+            }
+
+            if (group_id && schedule.group.id !== group_id) {
+                isMatch = false;
+            }
+
+            return isMatch;
+        }));
     }
+
 
     async getScheduleById(id: number): Promise<Schedule> {
         return this.apiService.getById(this.resource, id);

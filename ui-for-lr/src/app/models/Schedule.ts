@@ -5,6 +5,6 @@ export default interface Schedule {
     id: number;
     group: Group;
     subject: Subject;
-    day: string;
+    _day: string;
     time: string;
 }
