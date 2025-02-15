@@ -29,7 +29,7 @@ export default function SubjectList({role}: SubjectListProps) {
                 const data = await subjectService.getAllSubjects();
                 const new_data = data.map((item)=>({
                     ...item,
-                    teacherName: item.teacher.name,
+                    teacherName: item.teacher.first_name +" "+ item.teacher.surname,
                 }));
                 setSubjects(new_data);
             } catch (error) {
@@ -66,7 +66,7 @@ export default function SubjectList({role}: SubjectListProps) {
     return (
         <div className="p-4 text-black">
             <div className="flex justify-between mb-4">
-                <Link href={`${router.pathname}/0`}>
+                <Link href={`${router.pathname}/edit/0`}>
                     <Button color="success">
                         Create
                     </Button>

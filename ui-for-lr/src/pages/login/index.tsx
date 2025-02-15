@@ -3,11 +3,14 @@ import AuthService from "@/app/services/AuthService";
 import {Button, Card,CardBody } from "@nextui-org/react";
 import {Input} from "@heroui/react";
 import '@/app/globals.css';
+import {useRouter} from "next/router";
+import {jwtDecode} from "jwt-decode";
 
 export function LoginPage() {
     let [formData, setFormData] = useState({ username: "", password: "" });
     let [error, setError] = useState("");
     const authService = new AuthService();
+    const router = useRouter();
 
     let handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let { name, value } = e.target;
@@ -21,6 +24,14 @@ export function LoginPage() {
             let response = await authService.login(formData.username, formData.password);
             console.log("Logged in token:", response.token);
             localStorage.setItem("token", response.token);
+            const decoded: { roles?: string[] } = jwtDecode(response.token);
+            if(decoded.roles?.[0] === 'ROLE_ADMIN') {
+                router.push("/admin/dashboard");
+            }else if(decoded.roles?.[0] === 'ROLE_STUDENT') {
+                router.push("/student/dashboard");
+            }else if(decoded.roles?.[0] === 'ROLE_TEACHER') {
+                router.push("/teacher/dashboard");
+            }
         } catch (err) {
             setError("Authentication failed");
         }

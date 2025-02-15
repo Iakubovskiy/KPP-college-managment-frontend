@@ -3,7 +3,7 @@ import Student from "../models/Student";
 import Subject from "@/app/models/Subject";
 
 interface SubjectDTO {
-    _name: string;
+    name: string;
     hours_per_week: number;
     teacher_id: number;
 }

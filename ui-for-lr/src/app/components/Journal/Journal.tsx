@@ -8,10 +8,11 @@ import Subject from '@/app/models/Subject';
 import Student from '@/app/models/Student';
 
 interface JournalProps {
-    teacherId: number;
+    teacherId?: number | null;
+    studentId?: number | null;
 }
 
-const Journal = ({ teacherId }: JournalProps) => {
+const Journal = ({ teacherId, studentId }: JournalProps) => {
     const [groups, setGroups] = useState<Group[]>([]);
     const [subjects, setSubjects] = useState<Subject[]>([]);
     const [students, setStudents] = useState<Student[]>([]);
@@ -33,14 +34,23 @@ const Journal = ({ teacherId }: JournalProps) => {
         const fetchInitialData = async () => {
             try {
                 setLoading(true);
-                const subjectsData = await subjectService.getAllSubjects();
-                const teacherSubjects = subjectsData.filter(subject =>
-                    subject.teacher.id === teacherId
-                );
-                setSubjects(teacherSubjects);
 
-                const groupsData = await groupService.getAllGroups();
-                setGroups(groupsData);
+                if (teacherId) {
+                    const subjectsData = await subjectService.getAllSubjects();
+                    const teacherSubjects = subjectsData.filter(subject =>
+                        subject.teacher.id === teacherId
+                    );
+                    setSubjects(teacherSubjects);
+
+                    const groupsData = await groupService.getAllGroups();
+                    setGroups(groupsData);
+                } else if (studentId) {
+                    const studentData = await studentService.getStudentById(studentId);
+                    setGroups([studentData.group]);
+
+                    const subjectsData = await subjectService.getAllSubjects();
+                    setSubjects(subjectsData);
+                }
             } catch (err) {
                 setError('Помилка при завантаженні даних');
                 console.error(err);
@@ -50,7 +60,7 @@ const Journal = ({ teacherId }: JournalProps) => {
         };
 
         fetchInitialData();
-    }, [teacherId]);
+    }, [teacherId, studentId]);
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -61,19 +71,28 @@ const Journal = ({ teacherId }: JournalProps) => {
                 const studentsData = await groupService.getGroupStudents(Number(selectedGroup));
                 setStudents(studentsData);
 
-                const gradesObj: Record<number, number[]> = {};
-                for (const student of studentsData) {
-                    if (selectedSubject) {
-                        const studentGrades = await studentService.getStudentGradesInSubject(
+                if (selectedSubject) {
+                    const gradesPromises = studentsData.map(student =>
+                        studentService.getStudentGradesInSubject(
                             student.id,
                             Number(selectedSubject)
-                        );
-                        gradesObj[student.id] = studentGrades.map(g => g.grade);
-                    } else {
+                        )
+                    );
+
+                    const allGradesResults = await Promise.all(gradesPromises);
+                    const gradesObj: Record<number, number[]> = {};
+                    studentsData.forEach((student, index) => {
+                        gradesObj[student.id] = allGradesResults[index].map(g => g.grade);
+                    });
+
+                    setGrades(gradesObj);
+                } else {
+                    const gradesObj: Record<number, number[]> = {};
+                    studentsData.forEach(student => {
                         gradesObj[student.id] = [];
-                    }
+                    });
+                    setGrades(gradesObj);
                 }
-                setGrades(gradesObj);
             } catch (err) {
                 setError('Помилка при завантаженні студентів');
                 console.error(err);
@@ -94,7 +113,7 @@ const Journal = ({ teacherId }: JournalProps) => {
                 student_id: studentId,
                 subject_id: Number(selectedSubject),
                 grade: Number(newGrade),
-                teacher_id: teacherId,
+                teacher_id: teacherId!,
             });
 
             setGrades(prev => ({
@@ -132,13 +151,11 @@ const Journal = ({ teacherId }: JournalProps) => {
                                 disabled={loading}
                             >
                                 <option value="">Оберіть предмет</option>
-                                {subjects.map((subject) =>{
-                                    console.log(subject);
-                                    return(
+                                {subjects.map((subject) => (
                                     <option key={subject.id} value={subject.id}>
                                         {subject._name || "Без назви"}
                                     </option>
-                                )})}
+                                ))}
                             </select>
                         </div>
 
@@ -194,7 +211,7 @@ const Journal = ({ teacherId }: JournalProps) => {
                                 {students.map((student) => (
                                     <tr key={student.id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            {student.surname} {student.name}
+                                            {student.surname} {student.first_name}
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex gap-2">
@@ -209,7 +226,7 @@ const Journal = ({ teacherId }: JournalProps) => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            {editingGrade?.studentId === student.id ? (
+                                            {teacherId && editingGrade?.studentId === student.id ? (
                                                 <div className="flex gap-2 items-center">
                                                     <input
                                                         type="number"
@@ -237,15 +254,17 @@ const Journal = ({ teacherId }: JournalProps) => {
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <button
-                                                    onClick={() => setEditingGrade({
-                                                        studentId: student.id,
-                                                        index: grades[student.id]?.length || 0
-                                                    })}
-                                                    className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200"
-                                                >
-                                                    Додати оцінку
-                                                </button>
+                                                teacherId && (
+                                                    <button
+                                                        onClick={() => setEditingGrade({
+                                                            studentId: student.id,
+                                                            index: grades[student.id]?.length || 0
+                                                        })}
+                                                        className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200"
+                                                    >
+                                                        Додати оцінку
+                                                    </button>
+                                                )
                                             )}
                                         </td>
                                     </tr>

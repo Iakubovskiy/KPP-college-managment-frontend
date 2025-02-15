@@ -8,6 +8,7 @@ import GroupService from "../../../services/GroupService";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ScheduleService from "@/app/services/ScheduleService";
+import StudentService from "@/app/services/StudentService";
 
 interface ScheduleProps {
     id: number;
@@ -55,17 +56,33 @@ export default function ScheduleComponent({ id, role, period, day, group_id }: S
                     setSchedule(formattedData);
                 } else {
                     if (period === "day" && day) {
-                        let data = await dataService.getScheduleForDay(id, day);
+                        let targetId = id;
+                        console.log(role);
+                        if(role === 'student'){
+                            const studentService = new StudentService();
+                            const student = await studentService.getStudentById(id);
+                            targetId = student.group.id;
+                        }
+                        let data = await dataService.getScheduleForDay(targetId, day);
                         let formattedData = data.map((item) => ({
                             ...item,
+                            _day: day,
                             spec: "group" in item ? item.group : item.teacher,
                         }));
                         setSchedule(formattedData);
                     } else if (period === "week") {
-                        let data = await dataService.getSchedule(id);
+                        let targetId = id;
+                        console.log(role);
+                        if(role === 'student'){
+                            const studentService = new StudentService();
+                            const student = await studentService.getStudentById(id);
+                            targetId = student.group.id;
+                        }
+                        let data = await dataService.getSchedule(targetId, day);
+                        console.log(data);
                         let formattedData = data.map((item, index) => ({
                             ...item,
-                            id: index,
+                            _day:item.day,
                             spec: "group" in item ? item.group : item.teacher,
                         }));
                         setSchedule(formattedData);
@@ -97,9 +114,7 @@ export default function ScheduleComponent({ id, role, period, day, group_id }: S
 
     let actions: ActionType[] = [];
     if (role === "admin") {
-        actions = ['view', 'edit', 'delete'];
-    } else {
-        actions = ["view"];
+        actions = ['delete'];
     }
 
     return (

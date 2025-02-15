@@ -8,7 +8,7 @@ interface ScheduleResponse{
     id: number;
     teacher: string;
     subject: string;
-    _day: string;
+    day: string;
     time: string;
 }
 
@@ -32,8 +32,24 @@ class GroupService {
         return this.apiService.getAll(`${this.resource}-students/${id}`);
     }
 
-    async getSchedule(id: number): Promise<ScheduleResponse[]> {
-        return this.apiService.getAll(`${this.resource}-schedule/${id}`);
+    async getSchedule(id:number, day?: string): Promise<ScheduleResponse[]> {
+        const data:Schedule[] = await this.apiService.getAll(`${this.resource}-schedule/${id}`);
+        const requiredDate:ScheduleResponse[] = data.map((item:Schedule) => ({
+            id: item.id,
+            teacher: item.subject.teacher.first_name,
+            subject: item.subject._name,
+            day: item._day,
+            time: item.time
+        }));
+        return (requiredDate.filter((schedule:ScheduleResponse) => {
+            let isMatch = true;
+
+            if (day && schedule.day !== day) {
+                isMatch = false;
+            }
+
+            return isMatch;
+        }));
     }
 
     async getScheduleForDay(id: number, day:string): Promise<ScheduleResponse[]> {

@@ -11,7 +11,7 @@ const SubjectForm = () => {
     const subjectService = new SubjectService();
     const teacherService = new TeacherService();
 
-    const [_name, setName] = useState('');
+    const [name, setName] = useState('');
     const [teacherId, setTeacherId] = useState<Number>(Number(id));
     const [hoursPerWeek, setHoursPerWeek] = useState('');
     const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -57,7 +57,7 @@ const SubjectForm = () => {
 
         try {
             const subjectData = {
-                _name,
+                name,
                 teacher_id: Number(teacherId),
                 hours_per_week: Number(hoursPerWeek)
             };
@@ -91,7 +91,7 @@ const SubjectForm = () => {
                         <Input
                             label="Назва предмету"
                             placeholder="Введіть назву предмету"
-                            value={_name}
+                            value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
                         />
