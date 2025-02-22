@@ -12,7 +12,7 @@ const SubjectForm = () => {
     const teacherService = new TeacherService();
 
     const [name, setName] = useState('');
-    const [teacherId, setTeacherId] = useState<Number>(Number(id));
+    const [teacherId, setTeacherId] = useState<number>(Number(id));
     const [hoursPerWeek, setHoursPerWeek] = useState('');
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [loading, setLoading] = useState(false);
@@ -132,7 +132,7 @@ const SubjectForm = () => {
                             <Button
                                 color="default"
                                 variant="flat"
-                                onPress={() => router.push('/subjects')}
+                                onPress={() => router.push('/subject')}
                             >
                                 Скасувати
                             </Button>

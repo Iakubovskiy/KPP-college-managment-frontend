@@ -10,21 +10,22 @@ import Student from "../../../models/Student";
 
 interface StudentListProps {
     group_id:number;
-    role:string;
 }
 
-export default function StudentsList({group_id, role}: StudentListProps) {
+export default function StudentsList({group_id}: StudentListProps) {
     const [students, setStudents] = useState<Student[]>([]);
-    const studentService = new StudentService();
     const groupService = new GroupService();
-    const router = useRouter();
     useEffect(() => {
         const fetchStudents = async () => {
             try {
                 const data = await groupService.getGroupStudents(group_id);
                 setStudents(data);
-            } catch (error) {
-                console.error("Помилка при отриманні форм клинків:", error);
+            } catch (error:any) {
+                if (error.response?.status === 404) {
+                    setStudents([]);
+                } else {
+                    console.error("Помилка при отриманні студентів:", error);
+                }
             }
         };
 
@@ -36,21 +37,21 @@ export default function StudentsList({group_id, role}: StudentListProps) {
     };
 
     const columns: Column<Student>[] = [
-        { name: "Ім\'я", uid: "name" },
+        { name: "Ім\'я", uid: "first_name" },
         { name: "Прізвище", uid: "surname" },
         { name: "Email", uid: "email" },
     ];
 
     return (
-        <div className="p-4">
+        <div className="p-4 bg-gray-50 h-screen">
             <div className="flex justify-between mb-4">
-                <Link href={`${router.pathname}/0`}>
-                    <Button color="success">
-                        Create
-                    </Button>
-                </Link>
-                <Link href="/admin/dashboard" passHref>
-                    <Button color="primary">
+                {/*<Link href={`${router.pathname}/0`}>*/}
+                {/*    <Button color="success">*/}
+                {/*        Create*/}
+                {/*    </Button>*/}
+                {/*</Link>*/}
+                <Link href="/groups/" passHref>
+                    <Button color="primary" className="text-black">
                         Back
                     </Button>
                 </Link>

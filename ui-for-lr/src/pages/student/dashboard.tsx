@@ -26,7 +26,7 @@ const Dashboard = ()=> {
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-2xl font-bold mb-8 text-black">Панель викладача</h1>
+                <h1 className="text-2xl font-bold mb-8 text-black">Панель студента</h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
                     {menuItems.map((item, index) => (

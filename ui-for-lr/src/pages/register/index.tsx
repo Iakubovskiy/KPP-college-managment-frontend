@@ -119,6 +119,9 @@ const RegistrationPage: React.FC = () => {
                 <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
                     Зареєструватися
                 </button>
+                <button className="w-full bg-gray-400 text-white p-2 rounded mt-3" onClick={()=>router.push("/admin/dashboard")}>
+                    Скасувати
+                </button>
             </form>
         </div>
     );

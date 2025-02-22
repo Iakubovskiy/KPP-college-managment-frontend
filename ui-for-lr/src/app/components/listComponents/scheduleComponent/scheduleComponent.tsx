@@ -30,6 +30,7 @@ export default function ScheduleComponent({ id, role, period, day, group_id }: S
     const [schedule, setSchedule] = useState<FormatedData[]>([]);
     let dataService: TeacherService | GroupService;
     const scheduleService = new ScheduleService();
+    const router = useRouter();
 
     if (period === "day" && !day) {
         return ("Incorrect data");
@@ -40,8 +41,6 @@ export default function ScheduleComponent({ id, role, period, day, group_id }: S
     } else if (role === "student") {
         dataService = new GroupService();
     }
-
-    const router = useRouter();
 
     useEffect(() => {
         const fetchSchedule = async () => {

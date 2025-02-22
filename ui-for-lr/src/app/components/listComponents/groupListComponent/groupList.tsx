@@ -42,10 +42,11 @@ export default function GroupList({role}: GroupListProps) {
     ];
 
     let actions: ActionType[] = [];
-    if(role === "admin") {
-        actions = ['edit', 'delete'];
+    if(role === "ROLE_ADMIN") {
+        actions = ['view','edit', 'delete'];
     }
 
+    console.log(role);
     return (
         <div className="p-4">
             <div className="flex justify-between mb-4">

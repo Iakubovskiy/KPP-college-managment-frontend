@@ -10,6 +10,7 @@ class APIService {
   private async request<T>(
       url: string,
       method: string = "GET",
+      //@typescript-eslint/no-explicit-any
       body?: any,
       headers: HeadersInit = this.getDefaultHeaders()
   ): Promise<T> {
@@ -23,10 +24,16 @@ class APIService {
     if (!response.ok) {
       const errorText = await response.text();
       console.log(response.status);
+
+      if (response.status === 404) {
+        return [] as T;
+      }
+
       throw new Error(
           `HTTP Error! Status: ${response.status}, Message: ${errorText}`
       );
     }
+
     return response.json();
   }
 
@@ -54,15 +61,17 @@ class APIService {
   getById<T>(resource: string, id: number | string): Promise<T> {
     return this.request<T>(`${resource}/${id}`);
   }
-
+  //@typescript-eslint/no-explicit-any
   create<T>(resource: string, data: any): Promise<T> {
     return this.request<T>(resource, "POST", data);
   }
 
+  //@typescript-eslint/no-explicit-any
   update<T>(resource: string, id: number | string, data: any): Promise<T> {
     return this.request<T>(`${resource}/${id}`, "PUT", data);
   }
 
+  //@typescript-eslint/no-explicit-any
   partialUpdate<T>(resource: string, id: number | string, data: any): Promise<T> {
     return this.request<T>(`${resource}/${id}`, "PATCH", data);
   }

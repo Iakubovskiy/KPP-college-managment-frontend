@@ -24,7 +24,7 @@ type CustomTableProps<T> = {
     onDelete: (id: number) => void;
     actions?: ActionType[];
 };
-
+//@typescript-eslint/no-explicit-any
 export default function CustomTable<T extends Record<string, any>>({
                                                                        data,
                                                                        columns,
@@ -78,8 +78,10 @@ export default function CustomTable<T extends Record<string, any>>({
                 )}
             </TableHeader>
             <TableBody items={data}>
-                {(item: any) => (
+                {//@typescript-eslint/no-explicit-any
+                    (item: any) => (
                     <TableRow key={item.id} className="table-row">
+                        {/*@typescript-eslint/no-explicit-any*/}
                         {(columnKey: any) => (
                             <TableCell className={columnKey === "actions" ? "actions-cell" : ""}>
                                 {renderCell(item, columnKey as keyof T | "actions")}

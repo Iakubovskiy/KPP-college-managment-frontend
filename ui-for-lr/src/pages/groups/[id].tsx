@@ -1,13 +1,16 @@
-import GroupForm from "@/app/components/GroupComponent/GroupForm";
-import GroupList from "@/app/components/listComponents/groupListComponent/groupList";
+import StudentsList from '@/app/components/listComponents/studentListComponent/studentsList';
+import {useRouter} from 'next/router';
 import '@/app/globals.css';
 
-const GroupPage = () => {
+const studentsPage = () => {
+    const router = useRouter();
+    const id = router.query.id;
+
     return (
-        <div className="bg-gray-50 h-screen">
-            <GroupForm />
+        <div className="h-screen">
+            <StudentsList group_id={Number(id) || 1} />
         </div>
     );
-}
+};
 
-export default GroupPage;
+export default studentsPage;
